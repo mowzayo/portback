@@ -1,24 +1,29 @@
-require('dotenv').config();
+
 const express = require ('express');
 const mongoose = require ('mongoose');
 const ContactMessage = require('./models/contactMessage'); 
 const cors = require('cors');
+require('dotenv').config();
 
 const uri = process.env.MONGO_URI;
 
-const allowedOrigins = ['https://port-psi-liard.vercel.app'];
+const allowedOrigins = ['https://port-psi-liard.vercel.app', 'http://localhost:3000'];
+
 const corsOptions = {
   origin: function (origin, callback) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true); // allow requests from this origin
+    console.log('Request Origin:', origin);
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) { // allow localhost and production URL
+      callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
-  },
+  }
 };
 
-
-
+const app = express();
+app.use(cors(corsOptions));
+app.use(express.json())
+app.set('view engine', 'ejs');
 
 mongoose.connect(uri)
   .then(() => console.log('MongoDB Connected...'))
@@ -30,10 +35,8 @@ db.once('open', function() {
     console.log('Connected to MongoDB');
     });
 
-const app = express();
-app.use(express.json())
-app.set('view engine', 'ejs');
-app.use(cors(corsOptions));
+
+
 
 app.post('/contact', async (req, res) => {
     {/*console.log('Contact route hit'); */}
