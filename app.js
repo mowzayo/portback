@@ -3,7 +3,7 @@ const mongoose = require ('mongoose');
 const ContactMessage = require('./models/contactMessage'); 
 const cors = require('cors');
 
-const uri ="mongodb+srv://mosesayodelee11:<1HPvs1IS2GF2OFFI>@cluster0.m0ad3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0 ";
+const uri ="mongodb+srv://mosesayodelee11:1HPvs1IS2GF2OFFI@cluster0.m0ad3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0 ";
 
 mongoose.connect(uri)
   .then(() => console.log('MongoDB Connected...'))
