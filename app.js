@@ -1,26 +1,43 @@
+require('dotenv').config();
 const express = require ('express');
 const mongoose = require ('mongoose');
 const ContactMessage = require('./models/contactMessage'); 
 const cors = require('cors');
 
-const uri ="mongodb+srv://mosesayodelee11:<1HPvs1IS2GF2OFFI>@cluster0.m0ad3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0 ";
+
+
+
+const allowedOrigins = ['https://port-psi-liard.vercel.app'];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true); // allow requests from this origin
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+
+const uri = process.env.MONGO_URI;
 
 mongoose.connect(uri)
   .then(() => console.log('MongoDB Connected...'))
-  .catch(err => console.log(err));
+  .catch(err => console.log('MongoDB Connection Error: ',err));
 
-const db = mongoose.connection;
+{/* const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
     console.log('Connected to MongoDB');
-    });
+    });  */}
 
 const app = express();
 app.use(express.json())
-app.use(cors());
 app.set('view engine', 'ejs');
+app.use(cors(corsOptions));
 
 app.post('/contact', async (req, res) => {
+    {/*console.log('Contact route hit'); */}
     try {
         const { firstName, lastName, email, message } = req.body;
         const newMessage = new ContactMessage({
